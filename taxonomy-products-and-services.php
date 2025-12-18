@@ -49,10 +49,10 @@ if ( !defined('ABSPATH')) exit;
 					<h2><a href="<?php the_permalink() ?>"><?php if ( is_search() ) : echo $title; else : echo  the_title(); endif; ?></a></h2>
 						<?php get_template_part("includes/_article_meta"); ?>
 			<?php if('event' == get_post_type()) : ?>
-				<?php 
-					$current_time = current_time('mysql'); 
-					list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = split( '([^0-9])', $current_time );
-					$current_timestamp = $today_year . $today_month . $today_day . $hour . $minute;
+			<?php 
+				$current_time = current_time('mysql'); 
+				list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = preg_split('/\D+/', $current_time);
+				$current_timestamp = $today_year . $today_month . $today_day . $hour . $minute;
 					// Gets the event start month from the meta field
 					$start_nummonth = get_post_meta( $post->ID, '_start_month', true );
 					$start_month = get_post_meta( $post->ID, '_start_month', true );
@@ -160,7 +160,7 @@ if ( !defined('ABSPATH')) exit;
 	wp_reset_query();
 	$taxonomy = 'topic';
 	$queried_term = get_query_var($taxonomy);
-	$args = array( 'numberposts' => 1, 'topic' => $queried_term, 'post_type' => productbusinesscard );
+	$args = array( 'numberposts' => 1, 'topic' => $queried_term, 'post_type' => 'productbusinesscard' );
 	$myposts = get_posts( $args );	foreach( $myposts as $post ) : setup_postdata($post); ?>
 		<div class="glossary-box box box-highlight <?php echo ' promo-', $queried_term; ?>">
 			<h2><span>What is&hellip;</span><?php the_title(); ?></h2>

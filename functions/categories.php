@@ -5,7 +5,7 @@ Github: https://github.com/stephenh1988
 
 This is a class implementation of the wp.tuts+ tutorial: http://wp.tutsplus.com/tutorials/creative-coding/how-to-use-radio-buttons-with-taxonomies/
 
-To use it, just add to your functions.php and add the javascript file to your themeÕs js folder (call it radiotax.js). 
+To use it, just add to your functions.php and add the javascript file to your themeï¿½s js folder (call it radiotax.js). 
 
 Better still, make make a plug-in out of it, including the javascript file, and being sure to point the wp_register_script to radiotax.js in your plug-in folder.
 
@@ -24,13 +24,13 @@ class WordPress_Radio_Taxonomy {
 		add_action( 'admin_menu', array(__CLASS__,'remove_meta_box'));  
 
 		//Add new taxonomy meta box  
-		add_action( 'add_meta_boxes', array(__CLASS__,'add_meta_box'));  
+		add_action( 'add_meta_boxes', array($this,'add_meta_box'));  
 
 		//Load admin scripts
-		add_action('admin_enqueue_scripts',array(__CLASS__,'admin_script'));
+		add_action('admin_enqueue_scripts',array($this,'admin_script'));
 
 		//Load admin scripts
-		add_action('wp_ajax_radio_tax_add_taxterm',array(__CLASS__,'ajax_add_term'));
+		add_action('wp_ajax_radio_tax_add_taxterm',array($this,'ajax_add_term'));
 	}
 
 
@@ -89,11 +89,11 @@ class WordPress_Radio_Taxonomy {
 				<ul id="<?php echo $taxonomy; ?>checklist" class="list:<?php echo $taxonomy?> categorychecklist form-no-clear">
 				<?php foreach($terms as $term){
        				 $id = $taxonomy.'-'.$term->term_id;
-					$value= (is_taxonomy_hierarchical($taxonomy) ? "value='{$term->term_id}'" : "value='{$term->term_slug}'");
+					$value= (is_taxonomy_hierarchical($taxonomy) ? "value='{$term->term_id}'" : "value='{$term->slug}'");
 				        echo "<li id='$id'><label class='selectit'>";
 				        echo "<input type='radio' id='in-$id' name='{$name}'".checked($current,$term->term_id,false)." {$value} /> $term->name <br />";
-				        echo "</label></li>";
-		       	 }?>
+			        echo "</label></li>";
+	       	 }?>
 				</ul>
 			</div>
 
@@ -101,12 +101,12 @@ class WordPress_Radio_Taxonomy {
 			<div id="<?php echo $taxonomy; ?>-pop" class="tabs-panel" style="display: none;">
 				<ul id="<?php echo $taxonomy; ?>checklist-pop" class="categorychecklist form-no-clear" >
 				<?php foreach($popular as $term){
-				        $id = 'popular-'.$taxonomy.'-'.$term->term_id;
-					$value= (is_taxonomy_hierarchical($taxonomy) ? "value='{$term->term_id}'" : "value='{$term->term_slug}'");
-				        echo "<li id='$id'><label class='selectit'>";
-				        echo "<input type='radio' id='in-$id'".checked($current,$term->term_id,false)." {$value} /> $term->name<br />";
-				        echo "</label></li>";
-				}?>
+			        $id = 'popular-'.$taxonomy.'-'.$term->term_id;
+					$value= (is_taxonomy_hierarchical($taxonomy) ? "value='{$term->term_id}'" : "value='{$term->slug}'");
+			        echo "<li id='$id'><label class='selectit'>";
+			        echo "<input type='radio' id='in-$id'".checked($current,$term->term_id,false)." {$value} /> $term->name<br />";
+			        echo "</label></li>";
+			}?>
 				</ul>
 			</div>
 
@@ -149,7 +149,7 @@ class WordPress_Radio_Taxonomy {
 	
 		$id = $taxonomy.'-'.$tag->term_id;
 		$name = 'tax_input[' . $taxonomy . ']';
-		$value= (is_taxonomy_hierarchical($taxonomy) ? "value='{$tag->term_id}'" : "value='{$term->tag_slug}'");
+		$value= (is_taxonomy_hierarchical($taxonomy) ? "value='{$tag->term_id}'" : "value='{$tag->slug}'");
 
 		$html ='<li id="'.$id.'"><label class="selectit"><input type="radio" id="in-'.$id.'" name="'.$name.'" '.$value.' />'. $tag->name.'</label></li>';
 	
@@ -158,5 +158,7 @@ class WordPress_Radio_Taxonomy {
 	}
 
 }
-WordPress_Radio_Taxonomy::load();
+
+$__wp_radio_taxonomy = new WordPress_Radio_Taxonomy();
+$__wp_radio_taxonomy->load();
 ?>

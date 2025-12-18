@@ -548,11 +548,11 @@ function fjarrett_custom_taxonomy_dropdown( $taxonomy ) {
 // usage < fjarrett_custom_taxonomy_dropdown( 'topic' );
 
 function wdd_in_category_count($catslugs = '', $display = true) {
-	global $wpdb;
+    global $wpdb;
 
-	$post_count = 0;
-	$slug_where = '';
-	$catslugs_arr = split(',', $catslugs);
+    $post_count = 0;
+    $slug_where = '';
+    $catslugs_arr = explode(',', $catslugs);
 
 	foreach ($catslugs_arr as $catslugkey => $catslug) {
 		if ( $catslugkey > 0 ) {
@@ -712,7 +712,8 @@ function add_fb_open_graph_tags() {
 <?php  } elseif (is_taxonomy('topic', 'category')) {
 		$post_type = get_post_type_object( get_post_type($post));
 		$term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
-		$cat_desc = get_category(get_query_var('cat'))->category_description;
+		$__cat_obj = get_category(get_query_var('cat'));
+		$cat_desc = (!is_wp_error($__cat_obj) && is_object($__cat_obj)) ? (property_exists($__cat_obj,'description') ? $__cat_obj->description : '') : '';
 		$category = basename(get_permalink());
 		$current_tax = basename(get_permalink());
 		$the_category = get_category_by_slug($current_tax);

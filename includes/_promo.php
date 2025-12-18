@@ -5,7 +5,7 @@
 	
 	$args = array( 
 		'numberposts' => 1, 
-		'post_type' => productbusinesscard,
+		'post_type' => 'productbusinesscard',
 		'topic' => $term
 	);
 	$myposts = get_posts( $args );

@@ -4,7 +4,6 @@
 	$term = get_term_by( 'slug', get_query_var( 'term' ), get_query_var( 'taxonomy' ) );
 	$current_cat = basename(get_permalink());
 	$current_catt = get_query_var('category_name');
-	$category = get_category_by_slug($current_tax);
 ?>
 
 <?php if (is_home()) : ?>
@@ -32,5 +31,11 @@
 	<a href="<?php bloginfo('url'); ?>/feed/">RSS feed</a>
 
 <?php else : ?>
-	<a href="<?php bloginfo('url'); ?>/topic/<?php echo $term->slug; ?>/feed/">RSS feed</a>
+	<?php $term_slug = (is_object($term) && !is_wp_error($term)) ? $term->slug : get_query_var('term'); ?>
+	<?php $term_slug = $term_slug ? $term_slug : $current_catt; ?>
+	<?php if ($term_slug) : ?>
+	<a href="<?php bloginfo('url'); ?>/topic/<?php echo $term_slug; ?>/feed/">RSS feed</a>
+	<?php else : ?>
+	<a href="<?php bloginfo('url'); ?>/feed/">RSS feed</a>
+	<?php endif; ?>
 <?php endif; // end is_category ?>

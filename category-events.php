@@ -59,8 +59,13 @@ $post = $wp_query->get_queried_object();
 	$do_not_duplicate[] = $post->ID ?>
 <?php 
 	global $post, $wp_locale;
-	$current_time = current_time('timestamp'); 
-	list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = split( '([^0-9])', $current_time );
+    $current_time = current_time('timestamp'); 
+    $today_year = date('Y', $current_time);
+    $today_month = date('m', $current_time);
+    $today_day = date('d', $current_time);
+    $hour = date('H', $current_time);
+    $minute = date('i', $current_time);
+    $second = date('s', $current_time);
 	$end_month = get_post_meta( $post->ID, '_end_month', true );
 	$end_day = get_post_meta( $post->ID, '_end_day', true );
 	$end_year = get_post_meta( $post->ID, '_end_year', true );

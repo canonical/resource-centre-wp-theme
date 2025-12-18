@@ -2,6 +2,7 @@
     $attachment_id = $wpdb->get_var("SELECT ID FROM $wpdb->posts WHERE post_parent = '$post->ID' AND post_status = 'inherit' AND post_type='attachment' ORDER BY post_date DESC LIMIT 1");
     //$current_cat = get_query_var('category_name');
 	$current_cat = basename(get_permalink());
+	$uid = get_the_author_meta('ID');
 
 ?>
 	<div class="has-time">

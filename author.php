@@ -89,5 +89,5 @@ if ( !defined('ABSPATH')) exit;
 </div><!-- /.hcard -->
 </div><!-- /.twelve-col -->
 
-<?#php get_sidebar(); ?>
+<?php // get_sidebar(); ?>
 <?php get_footer(); ?>

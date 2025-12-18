@@ -31,5 +31,11 @@
 	<link rel="alternate" type="application/rss+xml" title="Ubuntu Insights feed" href="<?php bloginfo('url'); ?>/feed/" />
 
 <?php else : ?>
-	<link rel="alternate" type="application/rss+xml" title="Ubuntu Insights <?php echo $term->slug; ?> <?php echo $current_catt; ?> feed" href="<?php bloginfo('url'); ?>/topic/<?php echo $term->slug; ?>/feed/" />
+	<?php $term_slug = (is_object($term) && !is_wp_error($term)) ? $term->slug : get_query_var('term'); ?>
+	<?php $term_slug = $term_slug ? $term_slug : $current_catt; ?>
+	<?php if ($term_slug) : ?>
+	<link rel="alternate" type="application/rss+xml" title="Ubuntu Insights <?php echo $term_slug; ?> <?php echo $current_catt; ?> feed" href="<?php bloginfo('url'); ?>/topic/<?php echo $term_slug; ?>/feed/" />
+	<?php else : ?>
+	<link rel="alternate" type="application/rss+xml" title="Ubuntu Insights feed" href="<?php bloginfo('url'); ?>/feed/" />
+	<?php endif; ?>
 <?php endif; // end is_category ?>

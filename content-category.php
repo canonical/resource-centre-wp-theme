@@ -1,4 +1,4 @@
-	<?php if($thePostID == $post->ID) { } else { ?>
+<?php if($thePostID == $post->ID) { } else { ?>
 		<li class="row article<?php $k = $style_index%3; echo "$style_classes[$k]"; $style_index++; ?><?php $post_type = get_post_type_object( get_post_type($post) ); echo ' post-', $post_type->labels->css_friendly; ?>">
         	<?php
 				$key = 'postVideo';
@@ -9,10 +9,10 @@
 				<h2><a href="<?php the_permalink(); ?>"><?php the_title(); ?></a></h2>
 				<?php get_template_part("includes/_article_meta"); ?>
 			<?php if('event' == get_post_type()) : ?>
-				<?php 
-					$current_time = current_time('mysql'); 
-					list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = split( '([^0-9])', $current_time );
-					$current_timestamp = $today_year . $today_month . $today_day . $hour . $minute;
+			<?php 
+				$current_time = current_time('mysql'); 
+				list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = preg_split('/\D+/', $current_time);
+				$current_timestamp = $today_year . $today_month . $today_day . $hour . $minute;
 					// Gets the event start month from the meta field
 					$start_nummonth = get_post_meta( $post->ID, '_start_month', true );
 					$start_month = get_post_meta( $post->ID, '_start_month', true );

@@ -106,7 +106,7 @@
 		<label for="comment">Your comment <?php if ($req) echo "(required)"; ?></label>
 		<textarea name="comment" id="comment" cols="20" rows="10" tabindex="9"></textarea>
 	</li>
-	<!-- <li><p><strong>XHTML:</strong> You can use these tags: <code><?#php echo allowed_tags(); ?></code></p></li> -->
+	<!-- <li><p><strong>XHTML:</strong> You can use these tags: <code><?php /* echo allowed_tags(); */ ?></code></p></li> -->
 	<li>
 		<button name="submit" type="submit" id="submit" tabindex="10">Submit your comment</button>
 		<input type="hidden" name="comment_post_ID" value="<?php echo $id; ?>" />

@@ -2,7 +2,14 @@
 	<ul class="no-bullets">
 <?php
 $category = get_the_category();
-echo '<li><a href="/'.$category[0]->slug.'">'.$category[0]->cat_name.'</a></li>';
+if (is_array($category) && !empty($category) && isset($category[0]) && is_object($category[0])) {
+    $cat = $category[0];
+    $slug = property_exists($cat, 'slug') ? $cat->slug : '';
+    $name = property_exists($cat, 'name') ? $cat->name : '';
+    if ($slug && $name) {
+        echo '<li><a href="/'.$slug.'">'.$name.'</a></li>';
+    }
+}
 ?>
 
 		<?php

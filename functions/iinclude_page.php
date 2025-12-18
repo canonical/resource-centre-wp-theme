@@ -158,7 +158,7 @@ function iinclude_page ($post_id, $params = null, $return = false) {
         $content = $page->post_content;
         
         // stripslashes fixes an issues found by Nikhil Dabas which outpots too many slashes if the more tag is an image
-        $content = IIP::get_the_content($page,_(stripslashes($more)),0,'',$displayStyle);
+        $content = IIP::get_the_content($page, stripslashes($more), 0, '', $displayStyle);
 
         // Uncomment the following line if you are using EventCalendar plugin
         // remove_filter('the_content',  'ec3_filter_the_content', 20);

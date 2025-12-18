@@ -36,6 +36,7 @@ $postCount = 0;
 $post_type = get_post_type_object( get_post_type($post) );
 $category = get_the_category();
 $press_cats = array('press-releases', 'news');
+$do_not_duplicate = array();
 ?>
 
 <section class="row <?php the_category_unlinked(' post-'); ?><?php if(in_category( $press_cats )) echo ' has-time'; ?>">
@@ -46,8 +47,9 @@ $press_cats = array('press-releases', 'news');
 if(is_home() && !is_paged()) :
 $exclude_cat = 'downloads';
 $category = get_category_by_slug($exclude_cat);
+$exclude_cat_id = ($category && !is_wp_error($category)) ? (int)$category->cat_ID : 0;
 $my_query = new WP_Query( array(
-	'cat'             => -$category->cat_ID,
+	'cat'             => -$exclude_cat_id,
     'post__in'  => get_option( 'sticky_posts' ),
 	'ignore_sticky_posts' => 1,
 	'order'           => 'DESC',
@@ -70,8 +72,9 @@ $do_not_duplicate[] = $post->ID;
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1; // Needed for pagination
 $exclude_cat = 'downloads';
 $category = get_category_by_slug($exclude_cat);
+$exclude_cat_id = ($category && !is_wp_error($category)) ? (int)$category->cat_ID : 0;
 $query = new WP_Query( array(
-    'cat'	            => -$category->cat_ID,
+    'cat'	            => -$exclude_cat_id,
     'paged'           => $paged,
     'post__not_in'    => $do_not_duplicate,
     'post_type'       => 'post',
@@ -97,8 +100,9 @@ $section = 'internet-of-things';
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1; // Needed for pagination
 $exclude_cat = 'downloads';
 $category = get_category_by_slug($exclude_cat);
+$exclude_cat_id = ($category && !is_wp_error($category)) ? (int)$category->cat_ID : 0;
 $query = new WP_Query( array(
-    'cat'             => -$category->cat_ID,
+    'cat'             => -$exclude_cat_id,
     'paged'           => $paged,
     'post__not_in'    => $do_not_duplicate,
     'post_type'       => 'post',
@@ -123,8 +127,9 @@ wp_reset_query();
 $paged = (get_query_var('paged')) ? get_query_var('paged') : 1; // Needed for pagination
 $exclude_cat = 'downloads';
 $category = get_category_by_slug($exclude_cat);
+$exclude_cat_id = ($category && !is_wp_error($category)) ? (int)$category->cat_ID : 0;
 $query = new WP_Query( array(
-    'cat'             => -$category->cat_ID,
+    'cat'             => -$exclude_cat_id,
     'paged'           => $paged,
     'post__not_in'    => $do_not_duplicate,
     'post_type'       => 'post',
@@ -150,7 +155,7 @@ $paged = (get_query_var('paged')) ? get_query_var('paged') : 1; // Needed for pa
 $exclude_cat = 'downloads';
 $category = get_category_by_slug($exclude_cat);
 $current_time = current_time('mysql'); 
-list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = explode( '([^0-9])', $current_time );
+list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = preg_split('/\D+/', $current_time);
 $end_month = get_post_meta( $post->ID, '_end_month', true );
 $end_day = get_post_meta( $post->ID, '_end_day', true );
 $end_year = get_post_meta( $post->ID, '_end_year', true );
@@ -166,7 +171,6 @@ $meta_query = array(
 );
 
 $query = new WP_Query( array(
-	'group'           => $current_tax,
   'meta_compare'    => '>',
   'meta_key'        => '_end_eventtimestamp',
 	'order'           => 'ASC',
@@ -187,7 +191,7 @@ $query = new WP_Query( array(
       $do_not_duplicate[] = $post->ID ;
       // get time gubbin's
       $current_time = current_time('mysql'); 
-      list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = explode( '([^0-9])', $current_time );
+      list( $today_year, $today_month, $today_day, $hour, $minute, $second ) = preg_split('/\D+/', $current_time);
       $end_month = get_post_meta( $post->ID, '_end_month', true );
       $end_day = get_post_meta( $post->ID, '_end_day', true );
       $end_year = get_post_meta( $post->ID, '_end_year', true );

@@ -12,7 +12,7 @@
 register_activation_hook(__FILE__, 'post_readtime_install');
 register_deactivation_hook(__FILE__, 'post_readtime_uninstall');
 add_action('admin_menu', 'post_readtime_admin_menu_create');
-add_action('widgets_init', create_function('', 'return register_widget("post_readtime_widget");')); // Register the widget
+add_action('widgets_init', function() { return register_widget('post_readtime_widget'); }); // Register the widget
 
 // Options when activating the plugin
 function post_readtime_install() {
@@ -49,31 +49,30 @@ function post_readtime_settings() {
 		$wpm = get_option('post_readtime_wpm');
 		$suffix = stripslashes(htmlentities(get_option('post_readtime_format')));
 
-?>
 
-		  <div id="icon-options-general" class="icon32"></div><h2>Post Reading Time</h2>
-		  <div id="poststuff">
-			  <div class="postbox"><h3>Settings</h3>
-				  <div class="inside less">
-					  <p><strong><font color="red"><?php echo $message; ?></font></strong></p>
-					  <form method="post" action="">
-					  <p><strong>Words per minute</strong> <br /><input type="text" name="pr_wpm" value="<?php echo $wpm; ?>" /></p>
-					  <p><strong>Format</strong> <br /><input type="text" name="pr_format" value="<?php echo $format; ?>" /> ( Format of the output. Use %min% and %sec% as placeholders. Example: %min% min read ) </p>
-					  <input type="submit" name="Submit" class="button-primary" value="<?php esc_attr_e('Update options') ?>" />
-					  </form>
-				  </div>
-			  </div>
-			  <div class="postbox"><h3>About</h3>
-				  <div class="inside less">
-				  <p>An average person reads 250 - 300 words for minute, so you can change the
-				  default settings any way you like, the default here is 200 words per minute.</p>
-				  <p>To use it, add <pre>< ?php post_read_time(); ? ></pre> to your template (where you want to output the
-				  text).</p>
-				  </div>
-			  </div>
-		  </div>
-
-  <?php
+        echo <<<HTML
+          <div id="icon-options-general" class="icon32"></div><h2>Post Reading Time</h2>
+          <div id="poststuff">
+              <div class="postbox"><h3>Settings</h3>
+                  <div class="inside less">
+                      <p><strong><font color="red">{$message}</font></strong></p>
+                      <form method="post" action="">
+                      <p><strong>Words per minute</strong> <br /><input type="text" name="pr_wpm" value="{$wpm}" /></p>
+                      <p><strong>Format</strong> <br /><input type="text" name="pr_format" value="{$format}" /> ( Format of the output. Use %min% and %sec% as placeholders. Example: %min% min read ) </p>
+                      <input type="submit" name="Submit" class="button-primary" value="Update options" />
+                      </form>
+                  </div>
+              </div>
+              <div class="postbox"><h3>About</h3>
+                  <div class="inside less">
+                  <p>An average person reads 250 - 300 words for minute, so you can change the
+                  default settings any way you like, the default here is 200 words per minute.</p>
+                  <p>To use it, add <pre>&lt;?php post_read_time(); ?&gt;</pre> to your template (where you want to output the
+                  text).</p>
+                  </div>
+              </div>
+          </div>
+HTML;
 
 	}
 
@@ -82,9 +81,9 @@ function post_readtime_settings() {
 // Here, the widget code begins
 class post_readtime_widget extends WP_Widget {
 
-	function post_readtime_widget() {
-		parent::WP_Widget(false, $name="Post reading time");
-	}
+    public function __construct() {
+        parent::__construct('post_readtime_widget', 'Post reading time');
+    }
 
 	function widget($args, $instance) {
 
@@ -113,22 +112,15 @@ class post_readtime_widget extends WP_Widget {
 		return $instance;
 	}
 
-	function form($instance) {
-
-		$title = esc_attr($instance['title']);
-
-?>
-
-			<p>
-				<label for="<?php echo $this->get_field_id('title'); ?>">
-					<?php _e('Title: '); ?>
-	            </label>
-				<input class="widefat" id="<?php echo $this->get_field_id('title'); ?>" name="<?php echo $this->get_field_name('title'); ?>" type="text" value="<?php echo $title; ?>" />
-			</p>
-
-<?php
-
-	}
+    function form($instance) {
+        $title = esc_attr($instance['title']);
+        $field_id = $this->get_field_id('title');
+        $field_name = $this->get_field_name('title');
+        echo '<p>';
+        echo '<label for="' . $field_id . '">' . __('Title: ') . '</label>';
+        echo '<input class="widefat" id="' . $field_id . '" name="' . $field_name . '" type="text" value="' . $title . '" />';
+        echo '</p>';
+    }
 
 }
 
@@ -143,14 +135,14 @@ function set_readtime( $post_id ) {
 	$words_per_second_option = get_option('post_readtime_wpm');
 	$format = get_option('post_readtime_format');
 
-	$num_words = get_post_meta( $post_id , 'word_count' , single);
+    $num_words = get_post_meta( $post_id , 'word_count' , true);
 
 	// if the word count is not set - existing content - then let's set it now
 	if ( $num_words == '') {
 
 		readtime_publish_post( $post_id );
 
-		$num_words = get_post_meta( $post_id , 'word_count' , single);
+        $num_words = get_post_meta( $post_id , 'word_count' , true);
 
 		// still no word count? outta here
 		if ( $num_words == '' ) return '';
